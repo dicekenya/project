@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Listings</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: #2c3e50;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        nav a:hover {
+            color: #ff7e5f;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+        }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem 0;
+        }
+
+        .job-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .job-header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .job-title {
+            color: #2c3e50;
+            margin: 0 0 0.5rem;
+            font-size: 1.4rem;
+        }
+
+        .job-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .job-meta i {
+            margin-right: 0.5rem;
+            color: #ff7e5f;
+        }
+
+        .job-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .apply-btn {
+            background: #ff7e5f;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .apply-btn:hover:not(:disabled) {
+            background: #feb47b;
+        }
+
+        .apply-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .application-status {
+            color: #4CAF50;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .jobs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                width: 95%;
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="sign in.html">Sign In</a></li>
+                    <li><a href="sign up.html">Sign Up</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>Available Job Opportunities</h1>
+        <div class="jobs-grid" id="jobListings"></div>
+    </div>
+    <script>
+        async function loadAvailableJobs() {
+            const jobListElement = document.getElementById('jobListings');
+
+            if (!jobListElement) {
+                console.error('Error: "jobListings" not found in the document.');
+                return;
+            }
+
+            const response = await fetch('http://localhost:5000/api/jobs', {
+                headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+            });
+
+            if (!response.ok) {
+                alert('Error loading jobs.');
+                return;
+            }
+
+            const jobs = await response.json();
+
+            jobListElement.innerHTML = jobs.map(job => `
+        <div class="job-card">
+            <p><strong>Title:</strong> ${job.title}</p>
+            <p><strong>Description:</strong> ${job.description}</p>
+            <p><strong>Location:</strong> ${job.location}</p>
+            <p><strong>Posted by:</strong> ${job.employerName}</p>
+           <button class="apply-btn" onclick="handleApplication('${job._id}')">Apply</button>
+
+        </div>
+    `).join('');
+        }
+
+        // ✅ Ensure function runs after the page is fully loaded
+        document.addEventListener('DOMContentLoaded', loadAvailableJobs);
+
+        async function handleApplication(jobId) {
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                alert('You must be logged in as a househelp to apply.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/jobs/${jobId}/apply`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+
+                const data = await response.json(); // Read response
+
+                if (response.ok) {
+                    alert('Application submitted successfully!');
+                    console.log('Application response:', data);
+                } else {
+                    alert(`Error applying for job: ${data.message}`);
+                    console.error('Application error:', data);
+                }
+            } catch (error) {
+                alert('Error applying for job.');
+                console.error('Network error:', error);
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', loadAvailableJobs);
+    </script>
+</body>
+
+</html>

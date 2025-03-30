@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Use</title>
+    <style>
+        /* General Page Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        /* Header */
+        .header {
+            background-color: #007BFF;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* Container */
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        /* Terms Sections */
+        .terms-section {
+            margin-bottom: 20px;
+        }
+
+        .terms-section h3 {
+            color: #007BFF;
+        }
+
+        .terms-section p {
+            line-height: 1.6;
+        }
+
+        /* Checkbox & Button */
+        .agreement {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .agree-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-align: center;
+            width: 150px;
+        }
+
+        .agree-btn:disabled {
+            background-color: gray;
+            cursor: not-allowed;
+        }
+
+        .agree-btn:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">Terms of Use</div>
+
+    <div class="container">
+        <div class="terms-section">
+            <h3>1. Introduction</h3>
+            <p>Welcome to our platform. By using our services, you agree to comply with these Terms of Use. Please read them carefully.</p>
+        </div>
+
+        <div class="terms-section">
+            <h3>2. User Responsibilities</h3>
+            <p>As a user, you agree to provide accurate information, respect other users, and comply with applicable laws. Misuse of our platform may result in suspension or termination of your account.</p>
+        </div>
+
+        <div class="terms-section">
+            <h3>3. Employer Responsibilities</h3>
+            <p>Employers must provide truthful job postings and treat househelps fairly. Any form of exploitation, discrimination, or abuse is strictly prohibited.</p>
+        </div>
+
+        <div class="terms-section">
+            <h3>4. Househelp Responsibilities</h3>
+            <p>Househelps must be honest about their skills and experience. Accepting a job means you are committed to fulfilling the duties agreed upon with the employer.</p>
+        </div>
+
+        <div class="terms-section">
+            <h3>5. Messaging & Communication</h3>
+            <p>All communications between employers and househelps should be professional. Harassment, spam, or inappropriate messages will not be tolerated.</p>
+        </div>
+
+        <div class="terms-section">
+            <h3>6. Account Suspension & Termination</h3>
+            <p>We reserve the right to suspend or delete accounts that violate our terms. If your account is frozen due to violations, you will be informed accordingly.</p>
+        </div>
+
+        <div class="terms-section">
+            <h3>7. Privacy & Data Protection</h3>
+            <p>We prioritize user privacy. Your personal data is protected and will not be shared without consent, except as required by law.</p>
+        </div>
+
+        <div class="agreement">
+            <input type="checkbox" id="agreeCheckbox">
+            <label for="agreeCheckbox">I have read and agree to the Terms of Use</label>
+        </div>
+
+        <button id="agreeBtn" class="agree-btn" disabled>Agree & Continue</button>
+    </div>
+
+    <script>
+        // Enable the button only if the checkbox is checked
+        document.getElementById("agreeCheckbox").addEventListener("change", function() {
+            document.getElementById("agreeBtn").disabled = !this.checked;
+        });
+
+        // Redirect when the button is clicked
+        document.getElementById("agreeBtn").addEventListener("click", function() {
+            alert("Thank you for agreeing to the terms! Redirecting...");
+            window.location.href = "sign in.html"; // Change this to the next page after agreement
+        });
+    </script>
+
+</body>
+</html>

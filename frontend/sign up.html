@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Smart Web Linker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .signup-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-out;
+        }
+
+        .signup-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-group .password-container {
+            position: relative;
+        }
+
+        .form-group .password-container input {
+            padding-right: px;
+        }
+
+        .form-group .password-container .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #777;
+        }
+
+        .form-group .password-strength {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .form-group .password-strength.weak {
+            color: red;
+        }
+
+        .form-group .password-strength.medium {
+            color: orange;
+        }
+
+        .form-group .password-strength.strong {
+            color: green;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background: #ff7e5f;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #feb47b;
+        }
+
+        .social-login {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .social-login p {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .social-login .btn-google {
+            background: #db4437;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s ease;
+        }
+
+        .social-login .btn-google:hover {
+            background: #c1351d;
+        }
+
+        .signup-container p {
+            text-align: center;
+            margin-top: 20px;
+            color: #555;
+        }
+
+        .signup-container p a {
+            color: #ff7e5f;
+            text-decoration: none;
+        }
+       
+    </style>
+</head>
+<body>
+     <!-- Header Section -->
+     <header>
+        <div class="container">
+            <div class="logo">
+                <img src="logo.jpg" alt="Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about-us.html">About Us</a></li>
+                    <li><a href="how-it-works.html">How It Works</a></li>
+                    <li><a href="sign in.html">Sign In</a></li>
+                   
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="signup-container">
+        <h2>Sign Up</h2>
+        <form id="signup-form">
+            <div class="form-group">
+                <label for="fullname">Full Name</label>
+                <input type="text" id="fullname" name="fullname" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender" required>
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="usertype">User Type</label>
+                <select id="usertype" name="usertype" required>
+                    <option value="" disabled selected>Select User Type</option>
+                    <option value="employer">Employer</option>
+                    <option value="househelp">Househelp</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-container">
+                    <input type="password" id="password" name="password" required>
+                    <span class="toggle-password" onclick="togglePassword('password')">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+                <div id="password-strength" class="password-strength"></div>
+            </div>
+            <div class="form-group">
+                <label for="confirm-password">Confirm Password</label>
+                <div class="password-container">
+                    <input type="password" id="confirm-password" name="confirm-password" required>
+                    <span class="toggle-password" onclick="togglePassword('confirm-password')">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+            </div>
+            <label>
+                <input type="checkbox" id="termsCheckbox" required>
+                I confirm that I have read, consent, and agree to the
+                <a href="terms-of-use.html" target="_blank" style="color:blue;">Terms of Use</a> and
+                <a href="privacy-policy.html" target="_blank" style="color:blue;">Privacy Policy</a>.
+            </label><br><br>
+            <button type="submit" class="btn">Sign Up</button>
+        </form>
+       
+        <p>Already have an account? <a href="sign in.html">Sign In</a></p>
+    </div>
+
+    <script>
+        // Password Strength Checker
+        const passwordInput = document.getElementById('password');
+        const passwordStrength = document.getElementById('password-strength');
+    
+        passwordInput.addEventListener('input', () => {
+            const password = passwordInput.value;
+            let strength = '';
+    
+            if (password.length < 6) {
+                strength = 'weak';
+            } else if (password.length < 10) {
+                strength = 'medium';
+            } else {
+                strength = 'strong';
+            }
+    
+            passwordStrength.textContent = `Password Strength: ${strength}`;
+            passwordStrength.className = `password-strength ${strength}`;
+        });
+    
+        // Toggle Password Visibility
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling.querySelector('i');
+    
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    
+        // Handle Sign Up Form Submission
+        document.getElementById('signup-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const fullname = document.getElementById('fullname').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const gender = document.getElementById('gender').value;
+    const userType = document.getElementById('usertype').value;
+    const location = document.getElementById('location').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+
+    if (password !== confirmPassword) {
+        alert('Passwords do not match!');
+        return;
+    }
+
+    const userData = { fullname, email, phone, gender, userType, location, password };
+
+    // Send user data to backend
+    const response = await fetch('http://localhost:5000/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+    });
+
+    const data = await response.json();
+    
+    if (response.ok) {
+        alert('User created successfully! Please sign in.');
+        window.location.href = 'sign in.html';
+    } else {
+        alert(data.error); // Show error message if email exists
+    }
+});
+
+    </script>
+</body>
+</html>

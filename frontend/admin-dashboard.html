@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .dashboard {
+      padding: 20px;
+    }
+
+    .dashboard h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .nav-menu {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .nav-menu button,
+    .logout-btn {
+      padding: 10px 20px;
+      background: #ff7e5f;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .logout-btn {
+      background: #ff4444;
+    }
+
+    .nav-menu button:hover,
+    .logout-btn:hover {
+      background: #feb47b;
+    }
+
+    .content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #ff7e5f;
+      color: #fff;
+    }
+
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+
+    .actions button {
+      padding: 5px 10px;
+      margin: 2px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .actions button.freeze {
+      background-color: #ffcc00;
+      color: #000;
+    }
+
+    .actions button.delete {
+      background-color: #ff4444;
+      color: #fff;
+    }
+
+    .actions button.remove {
+      background-color: #00cc66;
+      color: #fff;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 60%;
+      max-width: 600px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+      padding: 1px;
+      resize: both;
+      overflow: auto;
+    }
+
+    .modal-header {
+      cursor: move;
+      background: #007bff;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 10px 10px 0 0;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 20px 10px;
+      border-radius: 10px;
+
+    }
+
+    .details-container {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .details-section {
+      width: 48%;
+      /* Adjust width to fit two sections side by side */
+    }
+
+    .uploaded-docs {
+      gap: 20px;
+      margin-bottom: 2px;
+    }
+
+    .uploaded-docs img {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .action-button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px;
+      font-weight: bold;
+    }
+
+    .approve {
+      background: green;
+      color: white;
+    }
+
+    .reject {
+      background: red;
+      color: white;
+    }
+
+    .action-button:hover {
+      opacity: 0.9;
+      /* Slight hover effect */
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .modal-close:hover {
+      color: #ff4444;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .sidebar {
+      width: 250px;
+      height: 100vh;
+      background: #ff7e5f;
+      color: white;
+      position: fixed;
+      left: 0;
+      top: 0;
+      padding: 20px;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar ul li {
+      margin: 10px 0;
+    }
+
+    .sidebar ul li button {
+      width: 100%;
+      padding: 10px;
+      background:  #ff7e5f;
+      color: white;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .sidebar ul li button:hover {
+      background: #555;
+    }
+
+    .dashboard {
+      margin-left: 260px;
+      /* Shift the dashboard content to the right */
+      padding: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="sidebar">
+    <h2 id="adminWelcome">Welcome, Admin</h2>
+    <ul>
+      <li><button onclick="toggleSection('househelpsSection')">Househelps</button></li>
+      <li><button onclick="toggleSection('employersSection')">Employers</button></li>
+      <li><button onclick="toggleSection('jobsSection')">Jobs</button></li>
+      <li><button onclick="toggleSection('blacklistSection')">Blacklist</button></li>
+      <li><button onclick="toggleSection('analyticsSection')">Show Analytics</button></li>
+      <li><button onclick="toggleSection('adminSection')">Admins</button></li>
+      <li><button onclick="openAdminModal()">Add New Admin</button></li>
+      <li><button onclick="toggleSection('verificationSection')">Pending Verifications</button></li>
+      <li><button onclick="toggleSection('auditLogSection')">View Admin Logs</button></li>
+      <li><button class="logout-btn" onclick="logout()">Logout</button></li>
+    </ul>
+  </div>
+  <div class="dashboard">
+
+
+    <div id="analyticsSection" class="content" style="display: none;">
+      <h2>Admin Dashboard Analytics</h2>
+      <div style="width: 400px; height: 300px; margin: auto;">
+        <canvas id="usersChart"></canvas>
+      </div>
+      <div style="width: 400px; height: 300px; margin: auto;">
+        <canvas id="jobsChart"></canvas>
+      </div>
+    </div>
+
+   <div id="househelpsSection" class="content" style="display: none;">
+    <h2>Househelps</h2>
+
+    <!-- ✅ Search Input -->
+    <input type="text" id="househelpSearch" placeholder="Search by name, email, or location..." onkeyup="searchHousehelps()">
+
+    <!-- ✅ Table Container -->
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="househelpsTableBody">
+            <!-- Table rows will be inserted here dynamically -->
+        </tbody>
+    </table>
+
+    <!-- ✅ Pagination Controls -->
+    <div id="househelpPaginationControls">
+        <button id="prevHousehelpPage" onclick="changeHousehelpPage(-1)">⬅ Previous</button>
+        <span id="househelpPageInfo">Page 1</span>
+        <button id="nextHousehelpPage" onclick="changeHousehelpPage(1)">Next ➡</button>
+    </div>
+</div>
+
+
+<div id="employersSection" class="content" style="display: none;">
+  <h2>Employers</h2>
+
+  <!-- ✅ Search Input -->
+  <input type="text" id="employerSearch" placeholder="Search by name, email, or location..." onkeyup="searchEmployers()">
+
+  <!-- ✅ Table Container -->
+  <table>
+      <thead>
+          <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Location</th>
+              <th>Status</th>
+              <th>Actions</th>
+          </tr>
+      </thead>
+      <tbody id="employersTableBody">
+          <!-- Data will be dynamically inserted here -->
+      </tbody>
+  </table>
+
+  <!-- ✅ Pagination Controls -->
+  <div id="employerPaginationControls">
+      <button id="prevEmployerPage" onclick="changeEmployerPage(-1)">⬅ Previous</button>
+      <span id="employerPageInfo">Page 1</span>
+      <button id="nextEmployerPage" onclick="changeEmployerPage(1)">Next ➡</button>
+  </div>
+</div>
+
+
+<div id="jobsSection" class="content">
+  <h2>Jobs</h2>
+  <!-- Search Input for Jobs -->
+  <input type="text" id="jobSearch" placeholder="Search by title, employer, location, or date" onkeyup="searchJobs()">
+  <div id="jobResults"></div>
+</div>
+
+    <div id="blacklistSection" class="content" style="display: none;">
+      <h2>Blacklist</h2>
+      <div id="blacklistTableBody"></div>
+    </div>
+
+    <div id="adminSection" class="content" style="display: none;">
+      <h2>Manage Admins</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="adminTableBody"></tbody>
+      </table>
+    </div>
+
+    <div id="verificationSection" class="content" style="display: none;">
+      <h2>Pending User Verifications</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>User Type</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="verificationTableBody"></tbody>
+      </table>
+    </div>
+    <!-- ✅ Rejection Reason Modal -->
+    <div id="rejectModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeRejectModal()">&times;</span>
+        <h2>Reject Verification</h2>
+        <p><strong>User:</strong> <span id="rejectUserName"></span></p>
+        <textarea id="rejectReason" placeholder="Enter rejection reason..."></textarea>
+        <button onclick="submitRejection()">Submit</button>
+      </div>
+    </div>
+    <div id="adminModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeAdminModal()">&times;</span>
+        <h2>Add New Admin</h2>
+        <form id="adminForm">
+          <label for="fullname">Full Name:</label>
+          <input type="text" id="fullname" required>
+          <label for="email">Email:</label>
+          <input type="email" id="email" required>
+          <label for="password">Password:</label>
+          <input type="password" id="password" required>
+          <label for="isSuperAdmin">
+            <input type="checkbox" id="isSuperAdmin"> Super Admin
+          </label>
+          <button type="submit">Add Admin</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="auditLogSection" class="content" style="display: none;">
+      <h2>Admin Activity Logs</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Admin</th>
+            <th>Action</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody id="auditLogTableBody"></tbody>
+      </table>
+    </div>
+<br>
+  <div class="content">
+    <h2>All Users</h2>
+
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Search by name or location..." onkeyup="filterUsers()">
+      <select id="filterStatus" onchange="filterUsers()">
+        <option value="">All Statuses</option>
+        <option value="verified">Verified</option>
+        <option value="pending">Pending Approval</option>
+      </select>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Location</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="userTableBody">
+        <!-- User rows will be dynamically inserted here -->
+      </tbody>
+    </table>
+  </div>
+</div>
+   
+   
+    <div id="paginationControls">
+      <button id="prevPage" onclick="changePage(-1)">⬅ Previous</button>
+      <span id="pageInfo"></span>
+      <button id="nextPage" onclick="changePage(1)">Next ➡</button>
+    </div>
+
+    <div id="verificationModal" class="modal">
+      <div id="modalHeader">
+        <span>🔍 Verification Details</span>
+        <button class="modal-close" onclick="closeModal()">❌</button>
+      </div>
+      <div class="modal-content">
+        <h3>Verification Details for <span id="userFullName"></span></h3>
+        <div class="details-container">
+          <div class="details-section">
+            <p><strong>Email:</strong> <span id="userEmail"></span></p>
+            <p><strong>User Type:</strong> <span id="userType"></span></p>
+            <p><strong>Phone:</strong> <span id="userPhone"></span></p>
+          </div>
+          <div class="details-section">
+            <p><strong>Location:</strong> <span id="userLocation"></span></p>
+            <p><strong>ID Number:</strong> <span id="idNumber"></span></p>
+            <p><strong>Nationality:</strong> <span id="nationality"></span></p>
+          </div>
+        </div>
+        <h4>Uploaded Documents:</h4>
+        <div class="uploaded-docs">
+          <img id="faceScanImg" src="" alt="Face Scan" width="150">
+          <img id="idFrontImg" src="" alt="ID Front" width="100">
+          <img id="idBackImg" src="" alt="ID Back" width="100">
+        </div>
+        <div class="button-container">
+          <button id="approveButton" class="action-button approve">Approve</button>
+          <button id="rejectButton" class="action-button reject">Reject</button>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    <script>
+      const adminToken = localStorage.getItem("adminToken");
+
+      if (!adminToken) {
+        alert("Your session has expired. Please log in again.");
+        localStorage.removeItem("adminToken");
+        window.location.href = "admin-login.html";
+      }
+      document.addEventListener("DOMContentLoaded", function () {
+  const adminName = localStorage.getItem("adminName") || "Admin";
+  document.getElementById("adminWelcome").textContent = `Welcome, ${adminName}`;
+});
+
+
+      // ✅ Helper function for API authentication headers
+      function getAuthHeaders() {
+        const token = localStorage.getItem("adminToken");
+        if (!token) {
+          alert("Your session has expired. Please log in again.");
+          window.location.href = "admin-login.html";
+          return {};
+        }
+        return { Authorization: `Bearer ${token}` };
+      }
+
+      // ✅ JWT Expiry Check
+      function isTokenExpired(token) {
+        try {
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          return payload.exp * 1000 < Date.now();
+        } catch (error) {
+          console.error("Invalid or corrupted token:", error);
+          return true; // Treat invalid tokens as expired
+        }
+      }
+
+      function checkTokenExpiration() {
+        if (isTokenExpired(adminToken)) {
+          alert("Your session has expired. Please log in again.");
+          localStorage.removeItem("adminToken");
+          window.location.href = "admin-login.html";
+        }
+      }
+
+      setInterval(checkTokenExpiration, 60000);
+      checkTokenExpiration();
+
+  // ✅ Toggle sections
+function toggleSection(sectionId) {
+    console.log("Toggling section:", sectionId);
+
+    const sections = [
+        "househelpsSection",
+        "employersSection",
+        "jobsSection",
+        "blacklistSection",
+        "adminSection",
+        "verificationSection",
+        "auditLogSection",
+        "analyticsSection"
+    ];
+
+    const targetSection = document.getElementById(sectionId);
+    const button = document.querySelector(`button[onclick="toggleSection('${sectionId}')"]`);
+
+    if (!targetSection) {
+        console.error(`Section ID '${sectionId}' not found!`);
+        return;
+    }
+
+    // ✅ Special handling for Analytics section toggle
+    if (sectionId === "analyticsSection") {
+        if (targetSection.style.display === "none" || targetSection.style.display === "") {
+            targetSection.style.display = "block";
+            if (button) button.textContent = "Hide Analytics";
+            loadAnalytics(); // ✅ Ensure data is loaded when analytics is shown
+        } else {
+            targetSection.style.display = "none";
+            if (button) button.textContent = "Show Analytics";
+        }
+        return; // Stop execution here for Analytics toggle
+    }
+
+    // Hide all other sections
+    sections.forEach(id => {
+        const section = document.getElementById(id);
+        if (section && id !== sectionId) section.style.display = 'none';
+    });
+
+    // Show the selected section
+    targetSection.style.display = 'block';
+
+    // ✅ Load data for the selected section
+    switch (sectionId) {
+        case 'househelpsSection':
+            loadHousehelps();
+            break;
+        case 'employersSection':
+            loadEmployers();
+            break;
+        case 'jobsSection':
+            loadJobs();
+            break;
+        case 'blacklistSection':
+            loadBlacklist();
+            break;
+        case 'adminSection':
+            loadAdmins();
+            break;
+        case 'verificationSection':
+            loadUnverifiedUsers();
+            break;
+        case 'auditLogSection':
+            loadAuditLogs();
+            break;
+    }
+}
+
+
+      // ✅ Logout function
+      function logout() {
+        localStorage.removeItem("adminToken");
+        window.location.href = "admin-login.html";
+      }
+
+      // ✅ Load Admin Logs
+      async function loadAuditLogs() {
+        try {
+          const response = await fetch("http://localhost:5000/api/admin/audit-logs", {
+            headers: getAuthHeaders()
+          });
+
+          if (!response.ok) throw new Error("Failed to fetch audit logs");
+
+          const logs = await response.json();
+          const logTableBody = document.getElementById("auditLogTableBody");
+
+          if (logs.length === 0) {
+            logTableBody.innerHTML = `<tr><td colspan="3">No logs available.</td></tr>`;
+            return;
+          }
+
+          logTableBody.innerHTML = logs.map(log => `
+      <tr>
+        <td>${log.adminName}</td>
+        <td>${log.action}</td>
+        <td>${new Date(log.timestamp).toLocaleString()}</td>
+      </tr>
+    `).join("");
+
+        } catch (error) {
+          console.error("Error loading audit logs:", error);
+          alert("Error loading logs");
+        }
+      }
+
+
+      let househelpPage = 1; // Default page
+      async function loadHousehelps(page = 1, searchQuery = "") {
+    try {
+        const response = await fetch(`http://localhost:5000/api/admin/househelps?page=${page}&search=${searchQuery}`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("adminToken")}` },
+        });
+
+        if (!response.ok) throw new Error("Failed to load househelps.");
+        const data = await response.json();
+
+        const tableBody = document.getElementById("househelpsTableBody");
+        const pageInfo = document.getElementById("househelpPageInfo");
+
+        // ✅ Populate the table with results
+        tableBody.innerHTML = data.househelps.map(househelp => `
+            <tr>
+                <td>${househelp.fullname}</td>
+                <td>${househelp.email}</td>
+                <td>${househelp.location}</td>
+                <td>${househelp.accountStatus}</td>
+                <td class="actions">
+                    <button class="freeze" onclick="freezeHousehelp('${househelp._id}')">Freeze</button>
+                    <button class="delete" onclick="deleteHousehelp('${househelp._id}')">Delete</button>
+                </td>
+            </tr>
+        `).join("");
+
+        // ✅ Update Pagination Info
+        pageInfo.textContent = `Page ${data.currentPage} of ${data.totalPages}`;
+        document.getElementById("prevHousehelpPage").disabled = data.currentPage === 1;
+        document.getElementById("nextHousehelpPage").disabled = data.currentPage === data.totalPages;
+
+    } catch (error) {
+        console.error("Error loading househelps:", error);
+        alert("Error fetching househelps");
+    }
+}
+function searchHousehelps() {
+    const searchQuery = document.getElementById("househelpSearch").value.trim();
+    loadHousehelps(1, searchQuery); // Load results from page 1 based on search
+}
+
+
+      async function freezeHousehelp(id) {
+    try {
+        const adminToken = localStorage.getItem("adminToken");
+
+        if (!adminToken) {
+            alert("Session expired. Please log in again.");
+            window.location.href = "admin-login.html";
+            return;
+        }
+
+        // Show a confirmation dialog before freezing
+        const confirmFreeze = confirm("⚠ Are you sure you want to freeze this househelp's account for 6 months?");
+        
+        if (!confirmFreeze) return; // Stop if admin cancels
+
+        const response = await fetch(`http://localhost:5000/api/admin/househelps/${id}/freeze`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${adminToken}`
+            }
+        });
+
+        console.log("Response Status:", response.status); // Debugging line
+
+        if (!response.ok) {
+            const errorData = await response.json(); // Get error message from backend
+            throw new Error(errorData.message || "Failed to freeze account.");
+        }
+
+        alert("✅ Househelp account frozen successfully!");
+        loadHousehelps(); // Refresh the list
+
+    } catch (error) {
+        console.error("❌ Error freezing househelp:", error);
+        alert(error.message);
+    }
+}
+
+      async function deleteHousehelp(id) {
+    try {
+        const adminToken = localStorage.getItem("adminToken");
+        console.log("Admin Token:", adminToken); // Debugging
+
+        if (!adminToken) {
+            alert("Session expired. Please log in again.");
+            window.location.href = "admin-login.html";
+            return;
+        }
+
+        // Show a confirmation dialog before deleting
+        const confirmDelete = confirm("⚠ Are you sure you want to delete this househelp? This action cannot be undone!");
+
+        if (!confirmDelete) return; // Stop if admin cancels
+
+        const response = await fetch(`http://localhost:5000/api/admin/househelps/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${adminToken}`
+            }
+        });
+
+        console.log("Response Status:", response.status); // Debugging
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Failed to delete account.");
+        }
+
+        alert("✅ Househelp account deleted successfully!");
+        loadHousehelps(); // Refresh the list
+
+    } catch (error) {
+        console.error("❌ Error deleting househelp:", error);
+        alert(error.message);
+    }
+}
+
+      let employerPage = 1; // Default page
+
+      async function loadEmployers(page = 1, searchQuery = "") {
+    try {
+        const response = await fetch(`http://localhost:5000/api/admin/employers?page=${page}&search=${searchQuery}`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("adminToken")}` }
+        });
+
+        if (!response.ok) throw new Error("Failed to load employers.");
+        const data = await response.json();
+
+        const tableBody = document.getElementById("employersTableBody");
+        const pageInfo = document.getElementById("employerPageInfo");
+
+        // ✅ Populate the table with results
+        tableBody.innerHTML = data.employers.map(employer => `
+            <tr>
+                <td>${employer.fullname}</td>
+                <td>${employer.email}</td>
+                <td>${employer.location}</td>
+                <td>${employer.accountStatus}</td>
+                <td class="actions">
+                    <button class="freeze" onclick="freezeEmployer('${employer._id}')">Freeze</button>
+                    <button class="delete" onclick="deleteEmployer('${employer._id}')">Delete</button>
+                </td>
+            </tr>
+        `).join("");
+
+        // ✅ Update Pagination Info
+        pageInfo.textContent = `Page ${data.currentPage} of ${data.totalPages}`;
+        document.getElementById("prevEmployerPage").disabled = data.currentPage === 1;
+        document.getElementById("nextEmployerPage").disabled = data.currentPage === data.totalPages;
+
+    } catch (error) {
+        console.error("Error loading employers:", error);
+        alert("Error fetching employers");
+    }
+}
+function searchEmployers() {
+    const searchQuery = document.getElementById("employerSearch").value.trim();
+    loadEmployers(1, searchQuery); // Load results from page 1 based on search
+}
+
+
+      async function freezeEmployer(id) {
+    try {
+        const adminToken = localStorage.getItem("adminToken");
+
+        if (!adminToken) {
+            alert("Session expired. Please log in again.");
+            window.location.href = "admin-login.html";
+            return;
+        }
+
+        // Show a confirmation dialog before freezing
+        const confirmFreeze = confirm("⚠ Are you sure you want to freeze this employer's account for 6 months?");
+        
+        if (!confirmFreeze) return; // Stop if admin cancels
+
+        const response = await fetch(`http://localhost:5000/api/admin/employers/${id}/freeze`, {
+            method: "PUT",
+            headers: { Authorization: `Bearer ${adminToken}` },
+        });
+
+        if (!response.ok) throw new Error("Failed to freeze account.");
+
+        alert("✅ Employer account frozen successfully!");
+        loadEmployers(); // Refresh the list
+
+    } catch (error) {
+        console.error("❌ Error freezing employer:", error);
+        alert(error.message);
+    }
+}
+
+
+      async function deleteEmployer(id) {
+    try {
+        const adminToken = localStorage.getItem("adminToken");
+
+        if (!adminToken) {
+            alert("Session expired. Please log in again.");
+            window.location.href = "admin-login.html";
+            return;
+        }
+
+        // Show a confirmation dialog before deleting
+        const confirmDelete = confirm("⚠ Are you sure you want to delete this employer? This action cannot be undone!");
+
+        if (!confirmDelete) return; // Stop if admin cancels
+
+        const response = await fetch(`http://localhost:5000/api/admin/employers/${id}`, {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${adminToken}` },
+        });
+
+        if (!response.ok) throw new Error("Failed to delete account.");
+
+        alert("✅ Employer account deleted successfully!");
+        loadEmployers(); // Refresh the list
+
+    } catch (error) {
+        console.error("❌ Error deleting employer:", error);
+        alert(error.message);
+    }
+}
+
+
+let jobPage = 1; // Default page
+
+async function loadJobs(page = 1) {
+    try {
+        const adminToken = localStorage.getItem("adminToken");
+
+        const response = await fetch(`http://localhost:5000/api/admin/jobs?page=${page}`, {
+            headers: { Authorization: `Bearer ${adminToken}` },
+        });
+
+        if (!response.ok) throw new Error("Failed to load jobs.");
+        const data = await response.json();
+
+        // Render the jobs table with a search bar
+        document.getElementById("jobResults").innerHTML = `
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Employer</th>
+                        <th>Location</th>
+                        <th>Posted Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="jobsTableBody">
+                    ${data.jobs.map(job => `
+                        <tr class="job-row">
+                            <td class="job-title">${job.title}</td>
+                            <td class="job-employer">${job.employer ? job.employer.fullname : "Unknown"}</td>
+                            <td class="job-location">${job.location}</td>
+                            <td class="job-posted-date">${new Date(job.createdAt).toLocaleDateString()}</td>
+                            <td class="actions">
+                                <button class="delete" onclick="deleteJob('${job._id}')">Delete</button>
+                            </td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
+            <div id="jobPaginationControls">
+                <button id="prevJobPage" onclick="changeJobPage(-1)">⬅ Previous</button>
+                <span id="jobPageInfo">Page ${data.currentPage} of ${data.totalPages}</span>
+                <button id="nextJobPage" onclick="changeJobPage(1)">Next ➡</button>
+            </div>
+        `;
+
+        updateJobPaginationControls(data.currentPage, data.totalPages);
+
+    } catch (error) {
+        console.error("Error loading jobs:", error);
+        alert(error.message);
+    }
+}
+
+// ✅ Search Functionality
+function searchJobs() {
+    const query = document.getElementById("jobSearch").value.toLowerCase();
+    const jobs = document.querySelectorAll(".job-row");
+
+    jobs.forEach(job => {
+        const title = job.querySelector(".job-title").innerText.toLowerCase();
+        const employer = job.querySelector(".job-employer").innerText.toLowerCase();
+        const location = job.querySelector(".job-location").innerText.toLowerCase();
+        const postedDate = job.querySelector(".job-posted-date").innerText.toLowerCase();
+
+        if (title.includes(query) || employer.includes(query) || location.includes(query) || postedDate.includes(query)) {
+            job.style.display = "";
+        } else {
+            job.style.display = "none";
+        }
+    });
+}
+
+async function deleteJob(id) {
+    try {
+        const adminToken = localStorage.getItem("adminToken");
+
+        if (!adminToken) {
+            alert("Session expired. Please log in again.");
+            window.location.href = "admin-login.html";
+            return;
+        }
+
+        // Show a confirmation dialog before deleting
+        const confirmDelete = confirm("⚠ Are you sure you want to delete this job? This action cannot be undone!");
+        if (!confirmDelete) return;
+
+        const response = await fetch(`http://localhost:5000/api/admin/jobs/${id}`, {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${adminToken}` },
+        });
+
+        if (!response.ok) throw new Error("Failed to delete job.");
+
+        alert("✅ Job deleted successfully!");
+        loadJobs(); // Refresh the list
+
+    } catch (error) {
+        console.error("❌ Error deleting job:", error);
+        alert(error.message);
+    }
+}
+      let blacklistPage = 1;
+
+      async function loadBlacklist(page = 1) {
+        try {
+          const response = await fetch(`http://localhost:5000/api/admin/blacklist?page=${page}`, {
+            headers: { Authorization: `Bearer ${adminToken}` },
+          });
+
+          if (!response.ok) throw new Error("Failed to load blacklist.");
+          const data = await response.json();
+
+          document.getElementById("blacklistSection").innerHTML = `
+        <h2>Blacklist</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Reason</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${data.blacklist.map(entry => `
+              <tr>
+                <td>${entry.email}</td>
+                <td>${entry.reason}</td>
+                <td class="actions">
+                  <button class="remove" onclick="removeFromBlacklist('${entry.email}')">Remove</button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+        <div id="blacklistPaginationControls">
+          <button id="prevBlacklistPage" onclick="changeBlacklistPage(-1)">⬅ Previous</button>
+          <span id="blacklistPageInfo">Page ${data.currentPage} of ${data.totalPages}</span>
+          <button id="nextBlacklistPage" onclick="changeBlacklistPage(1)">Next ➡</button>
+        </div>
+      `;
+
+          updateBlacklistPaginationControls(data.currentPage, data.totalPages);
+
+        } catch (error) {
+          console.error("Error loading blacklist:", error);
+          alert(error.message);
+        }
+      }
+
+      async function removeFromBlacklist(email) {
+    try {
+        const adminToken = localStorage.getItem("adminToken");
+
+        if (!adminToken) {
+            alert("Session expired. Please log in again.");
+            window.location.href = "admin-login.html";
+            return;
+        }
+
+        // Show a confirmation dialog before removing from blacklist
+        const confirmRemove = confirm(`⚠ Are you sure you want to remove ${email} from the blacklist?`);
+
+        if (!confirmRemove) return; // Stop if admin cancels
+
+        const response = await fetch(`http://localhost:5000/api/admin/blacklist/${email}`, {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${adminToken}` },
+        });
+
+        if (!response.ok) throw new Error("Failed to remove email from blacklist.");
+
+        alert("✅ Email removed from blacklist successfully!");
+        loadBlacklist(); // Refresh the list
+
+    } catch (error) {
+        console.error("❌ Error removing from blacklist:", error);
+        alert(error.message);
+    }
+}
+
+// Store chart instances globally so we can destroy them later
+let usersChartInstance = null;
+let jobsChartInstance = null;
+
+async function loadAnalytics() {
+    try {
+        const response = await fetch("http://localhost:5000/api/admin/analytics", {
+            headers: { Authorization: `Bearer ${localStorage.getItem("adminToken")}` },
+        });
+
+        const data = await response.json();
+
+        // ✅ Destroy existing charts before reloading new ones
+        if (usersChartInstance) {
+            usersChartInstance.destroy();
+        }
+        if (jobsChartInstance) {
+            jobsChartInstance.destroy();
+        }
+
+        // ✅ Create Users Chart
+        const ctxUsers = document.getElementById("usersChart").getContext("2d");
+        usersChartInstance = new Chart(ctxUsers, {
+            type: "bar",
+            data: {
+                labels: ["Househelps", "Employers", "Active Users", "Frozen Users", "Blacklisted"],
+                datasets: [{
+                    label: "User Statistics",
+                    data: [data.totalHousehelps, data.totalEmployers, data.activeUsers, data.frozenUsers, data.blacklistedUsers],
+                    backgroundColor: ["#ff6384", "#36a2eb", "#4bc0c0", "#ffcc00", "#ff4444"],
+                }]
+            }
+        });
+
+        // ✅ Create Jobs Chart
+        const ctxJobs = document.getElementById("jobsChart").getContext("2d");
+        jobsChartInstance = new Chart(ctxJobs, {
+            type: "pie",
+            data: {
+                labels: ["Total Jobs"],
+                datasets: [{
+                    label: "Job Statistics",
+                    data: [data.totalJobs],
+                    backgroundColor: ["#36a2eb"],
+                }]
+            }
+        });
+
+    } catch (error) {
+        console.error("Error loading analytics:", error);
+    }
+}
+
+      let adminPage = 1; // Default page
+      async function loadAdmins(page = 1) {
+        try {
+          const response = await fetch(`http://localhost:5000/api/admin/admins?page=${page}`, {
+            headers: { Authorization: `Bearer ${adminToken}` },
+          });
+
+          if (!response.ok) throw new Error("Failed to load admins.");
+          const data = await response.json();
+
+          document.getElementById("adminSection").innerHTML = `
+        <h2>Admin Users</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${data.admins.length > 0 ? data.admins.map(admin => `
+              <tr>
+                <td>${admin.fullname}</td>
+                <td>${admin.email}</td>
+                <td>${admin.isSuperAdmin ? "Super Admin" : "Regular Admin"}</td>
+              <td class="actions">
+    ${admin.isSuperAdmin && admin._id === localStorage.getItem("adminId")
+              ? `<span style="color: gray;">Cannot delete self</span>`
+              : `<button class="delete" onclick="deleteAdmin('${admin._id}')">Delete</button>`
+            }
+</td>
+
+              </tr>
+            `).join("") : `<tr><td colspan="3">No admins found.</td></tr>`}
+          </tbody>
+        </table>
+        <div id="adminPaginationControls">
+          <button id="prevAdminPage" onclick="changeAdminPage(-1)">⬅ Previous</button>
+          <span id="adminPageInfo">Page ${data.currentPage} of ${data.totalPages}</span>
+          <button id="nextAdminPage" onclick="changeAdminPage(1)">Next ➡</button>
+        </div>
+      `;
+
+          updateAdminPaginationControls(data.currentPage, data.totalPages);
+
+        } catch (error) {
+          console.error("Error loading admins:", error);
+          alert(error.message);
+        }
+      }
+
+      async function deleteAdmin(adminId) {
+    try {
+        const adminToken = localStorage.getItem("adminToken");
+
+        if (!adminToken) {
+            alert("Session expired. Please log in again.");
+            window.location.href = "admin-login.html";
+            return;
+        }
+
+        // Show a confirmation dialog before deleting the admin
+        const confirmDelete = confirm("⚠ Are you sure you want to delete this admin? This action cannot be undone!");
+
+        if (!confirmDelete) return; // Stop if admin cancels
+
+        const response = await fetch(`http://localhost:5000/api/admin/admin/${adminId}`, {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${adminToken}` }
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || "Failed to delete admin.");
+
+        alert("✅ Admin deleted successfully!");
+        loadAdmins(); // Refresh admin list
+
+    } catch (error) {
+        console.error("❌ Error deleting admin:", error);
+        alert(error.message);
+    }
+}
+
+
+      function openAdminModal() {
+        document.getElementById("adminModal").style.display = "block";
+      }
+
+      function closeAdminModal() {
+        document.getElementById("adminModal").style.display = "none";
+      }
+
+      document.getElementById("adminForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const fullname = document.getElementById("fullname").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const isSuperAdmin = document.getElementById("isSuperAdmin").checked;
+
+        // ✅ Enforce strong password rules (at least 8 chars, one uppercase, one number)
+        if (!/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
+          alert("Password must be at least 8 characters long, contain an uppercase letter, and a number.");
+          return;
+        }
+
+        try {
+          const response = await fetch("http://localhost:5000/api/admin/admins", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("adminToken")}` },
+            body: JSON.stringify({ fullname, email, password, isSuperAdmin })
+          });
+
+          if (response.ok) {
+            alert("Admin added successfully");
+            closeAdminModal();
+            loadAdmins();
+          } else {
+            alert("Failed to add admin");
+          }
+        } catch (error) {
+          console.error("Error adding admin:", error);
+        }
+      });
+
+      let unverifiedPage = 1;
+
+      async function loadUnverifiedUsers(page = 1) {
+        try {
+          const response = await fetch(`http://localhost:5000/api/admin/unverified-users?page=${page}`, {
+            headers: { Authorization: `Bearer ${adminToken}` },
+          });
+
+          if (!response.ok) throw new Error("Failed to load unverified users.");
+          const data = await response.json();
+          console.log(data.unverifiedUsers); // Debugging
+
+
+          document.getElementById("verificationSection").innerHTML = `
+        <h2>Pending User Verifications</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Full Name</th>
+              <th>Email</th>
+              <th>User Type</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${data.unverifiedUsers.map(user => `
+              <tr>
+                <td>${user.fullname}</td>
+                <td>${user.email}</td>
+                <td>${user.userType}</td>
+    <td><button onclick="viewVerificationDetails('${user._id}')">Review</button></td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+        <div id="verificationPaginationControls">
+          <button id="prevVerificationPage" onclick="changeVerificationPage(-1)">⬅ Previous</button>
+          <span id="verificationPageInfo">Page ${data.currentPage} of ${data.totalPages}</span>
+          <button id="nextVerificationPage" onclick="changeVerificationPage(1)">Next ➡</button>
+        </div>
+      `;
+
+          updateVerificationPaginationControls(data.currentPage, data.totalPages);
+
+        } catch (error) {
+          console.error("Error loading unverified users:", error);
+          alert(error.message);
+        }
+      }
+
+      function showVerificationDetails(user) {
+        // ✅ Set the modal content with user details
+        document.getElementById("userFullName").textContent = user.fullname || "N/A";
+        document.getElementById("userEmail").textContent = user.email || "N/A";
+        document.getElementById("userType").textContent = user.userType || "N/A";
+        document.getElementById("userPhone").textContent = user.phone || "N/A";
+        document.getElementById("userLocation").textContent = user.location || "N/A";
+        document.getElementById("idNumber").textContent = user.idNumber || "N/A";
+        document.getElementById("nationality").textContent = user.nationality || "N/A";
+
+        // ✅ Set image sources
+        document.getElementById("faceScanImg").src = user.faceScan || "default.jpg";
+        document.getElementById("idFrontImg").src = user.idFront || "default.jpg";
+        document.getElementById("idBackImg").src = user.idBack || "default.jpg";
+
+        // ✅ Check if buttons exist before modifying them
+        const approveButton = document.getElementById("approveButton");
+        if (approveButton) {
+          approveButton.setAttribute("onclick", `verifyUser('${user._id}')`);
+        } else {
+          console.error("❌ 'approveButton' not found in HTML.");
+        }
+
+        const rejectButton = document.getElementById("rejectButton");
+        if (rejectButton) {
+          rejectButton.setAttribute("onclick", `rejectUser('${user._id}', '${user.fullname}')`);
+        } else {
+          console.error("❌ 'rejectButton' not found in HTML.");
+        }
+
+        // ✅ Show the modal
+        document.getElementById("verificationModal").style.display = "block";
+      }
+
+      // ✅ Function to Close the Modal
+      function closeModal() {
+        document.getElementById("verificationModal").style.display = "none";
+      }
+
+      async function viewVerificationDetails(userId) {
+        try {
+          const response = await fetch(`http://localhost:5000/api/admin/unverified-user/${userId}`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("adminToken")}` },
+          });
+          const user = await response.json();
+
+          showVerificationDetails(user);
+
+
+          document.getElementById("verificationModal").style.display = "block"; // Open modal
+        } catch (error) {
+          console.error("Error fetching verification details:", error);
+        }
+      }
+
+      async function verifyUser(id) {
+        if (confirm("Are you sure you want to verify this user?")) {
+          try {
+            const response = await fetch(`http://localhost:5000/api/admin/verify-user/${id}`, {
+              method: "PUT",
+              headers: { Authorization: `Bearer ${localStorage.getItem("adminToken")}` },
+            });
+            if (response.ok) {
+              alert("User  verified successfully");
+              document.getElementById("verificationModal").style.display = "none";
+              loadUnverifiedUsers(); // Refresh list
+            } else {
+              alert("Failed to verify user");
+            }
+          } catch (error) {
+            console.error("Error verifying user:", error);
+          }
+        }
+      }
+
+      function rejectUser(id, userName) {
+        const reason = prompt(`Why are you rejecting ${userName}'s verification?`);
+        if (!reason) {
+          alert("⚠️ Rejection reason is required.");
+          return;
+        }
+
+        if (confirm("Are you sure you want to reject this verification?")) {
+          fetch(`http://localhost:5000/api/admin/reject-user/${id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${localStorage.getItem("adminToken")}`
+            },
+            body: JSON.stringify({ reason })
+          })
+            .then(response => response.json())
+            .then(data => {
+              alert(data.message);
+              document.getElementById("verificationModal").style.display = "none";
+              loadUnverifiedUsers(); // ✅ Refresh pending verification list
+            })
+            .catch(error => console.error("❌ Error rejecting user:", error));
+        }
+      }
+
+
+      let currentPage = 1; // Default page
+
+      async function fetchUsers(page = 1) {
+        try {
+          const response = await fetch(`http://localhost:5000/api/admin/all-users?page=${page}`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("adminToken")}` }
+          });
+
+          const data = await response.json();
+          displayUsers(data.users);
+          updatePaginationControls(data.currentPage, data.totalPages);
+        } catch (error) {
+          console.error("Error loading users:", error);
+        }
+      }
+      function displayUsers(users) {
+        const tableBody = document.getElementById("userTableBody");
+        tableBody.innerHTML = users.map(user => `
+        <tr>
+          <td>${user.fullname}</td>
+          <td>${user.location}</td>
+          <td>${user.verified ? "Verified ✅" : "Pending ❌"}</td>
+        </tr>
+    `).join("");
+      }
+
+
+      function filterUsers() {
+        const searchQuery = document.getElementById("searchInput").value.toLowerCase();
+        const statusFilter = document.getElementById("filterStatus").value;
+
+        document.querySelectorAll("#userTableBody tr").forEach(row => {
+          const name = row.cells[0].textContent.toLowerCase();
+          const location = row.cells[1].textContent.toLowerCase();
+          const status = row.cells[2].textContent.toLowerCase();
+
+          const matchesSearch = name.includes(searchQuery) || location.includes(searchQuery);
+          const matchesStatus = !statusFilter || status.includes(statusFilter);
+
+          row.style.display = (matchesSearch && matchesStatus) ? "" : "none";
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        toggleSection('househelpsSection'); // Load Househelps by default
+        fetchUsers(); // Fetch users on load
+      });
+      function makeModalDraggable(modalId, headerId) {
+        const modal = document.getElementById(modalId);
+        const header = document.getElementById(headerId);
+
+        let offsetX = 0, offsetY = 0, isDragging = false;
+
+        header.addEventListener('mousedown', (e) => {
+          isDragging = true;
+          offsetX = e.clientX - modal.offsetLeft;
+          offsetY = e.clientY - modal.offsetTop;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+          if (isDragging) {
+            modal.style.left = `${e.clientX - offsetX}px`;
+            modal.style.top = `${e.clientY - offsetY}px`;
+          }
+        });
+
+        document.addEventListener('mouseup', () => {
+          isDragging = false;
+        });
+      }
+
+      // ✅ Make the modal draggable when opened
+      document.addEventListener("DOMContentLoaded", function () {
+        makeModalDraggable('verificationModal', 'modalHeader');
+      });
+
+      function updatePaginationControls(currentPage, totalPages) {
+        document.getElementById("pageInfo").textContent = `Page ${currentPage} of ${totalPages}`;
+
+        document.getElementById("prevPage").disabled = currentPage === 1;
+        document.getElementById("nextPage").disabled = currentPage === totalPages;
+      }
+
+      function changePage(step) {
+        currentPage += step;
+        fetchUsers(currentPage);
+      }
+      function updateHousehelpPaginationControls(currentPage, totalPages) {
+        document.getElementById("househelpPageInfo").textContent = `Page ${currentPage} of ${totalPages}`;
+
+        document.getElementById("prevHousehelpPage").disabled = currentPage === 1;
+        document.getElementById("nextHousehelpPage").disabled = currentPage === totalPages;
+      }
+
+
+      function changeHousehelpPage(step) {
+        househelpPage += step;
+        loadHousehelps(househelpPage);
+      }
+
+      function updateEmployerPaginationControls(currentPage, totalPages) {
+        document.getElementById("employerPageInfo").textContent = `Page ${currentPage} of ${totalPages}`;
+
+        document.getElementById("prevEmployerPage").disabled = currentPage === 1;
+        document.getElementById("nextEmployerPage").disabled = currentPage === totalPages;
+      }
+
+      function changeEmployerPage(step) {
+        employerPage += step;
+        loadEmployers(employerPage);
+      }
+      function updateJobPaginationControls(currentPage, totalPages) {
+        document.getElementById("jobPageInfo").textContent = `Page ${currentPage} of ${totalPages}`;
+
+        document.getElementById("prevJobPage").disabled = currentPage === 1;
+        document.getElementById("nextJobPage").disabled = currentPage === totalPages;
+      }
+
+      function changeJobPage(step) {
+        jobPage += step;
+        loadJobs(jobPage);
+      }
+      function updateBlacklistPaginationControls(currentPage, totalPages) { /* similar logic */ }
+      function changeBlacklistPage(step) { blacklistPage += step; loadBlacklist(blacklistPage); }
+
+      function updateVerificationPaginationControls(currentPage, totalPages) { /* similar logic */ }
+      function changeVerificationPage(step) { unverifiedPage += step; loadUnverifiedUsers(unverifiedPage); }
+
+      function updateAdminPaginationControls(currentPage, totalPages) {
+        document.getElementById("adminPageInfo").textContent = `Page ${currentPage} of ${totalPages}`;
+
+        document.getElementById("prevAdminPage").disabled = currentPage === 1;
+        document.getElementById("nextAdminPage").disabled = currentPage === totalPages;
+      }
+
+      function changeAdminPage(step) {
+        adminPage += step;
+        loadAdmins(adminPage);
+      }
+      const socket = io("http://localhost:5000"); // Connect to WebSocket server
+
+      // Listen for househelp updates
+      socket.on("househelpUpdated", (data) => {
+        console.log("🔄 Househelp updated:", data);
+        const househelpElement = document.querySelector(`#househelp-${data.id} .status`);
+        if (househelpElement) {
+          househelpElement.textContent = data.status;
+        }
+      });
+
+      // Listen for employer updates
+      socket.on("employerUpdated", (data) => {
+        console.log("🔄 Employer updated:", data);
+        const employerElement = document.querySelector(`#employer-${data.id} .status`);
+        if (employerElement) {
+          employerElement.textContent = data.status;
+        }
+      });
+
+      // Listen for job updates
+      socket.on("jobUpdated", (data) => {
+        console.log("🔄 Job updated:", data);
+        const jobElement = document.querySelector(`#job-${data.id} .title`);
+        if (jobElement) {
+          jobElement.textContent = data.title;
+        }
+      });
+      let rejectingUserId = "";
+
+      // ✅ Open Rejection Modal
+      function openRejectModal(userId, userName) {
+        rejectingUserId = userId;
+        document.getElementById("rejectUserName").textContent = userName;
+        document.getElementById("rejectModal").style.display = "block";
+      }
+
+      // ✅ Close Rejection Modal
+      function closeRejectModal() {
+        document.getElementById("rejectModal").style.display = "none";
+      }
+
+      // ✅ Submit Rejection with Reason
+      function submitRejection() {
+        const reason = document.getElementById("rejectReason").value.trim();
+        if (!reason) {
+          alert("⚠️ Please enter a reason for rejection.");
+          return;
+        }
+
+        fetch(`http://localhost:5000/api/admin/reject-user/${rejectingUserId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("adminToken")}`
+          },
+          body: JSON.stringify({ reason })
+        })
+          .then(response => response.json())
+          .then(data => {
+            alert(data.message);
+            closeRejectModal();
+            fetchUsers(); // Refresh list
+          })
+          .catch(error => console.error("❌ Error rejecting user:", error));
+      }
+    </script>
+</body>
+
+</html>

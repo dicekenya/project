@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy</title>
+    <style>
+        /* General Page Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        /* Header */
+        .header {
+            background-color: #007BFF;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* Container */
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        /* Privacy Sections */
+        .privacy-section {
+            margin-bottom: 20px;
+        }
+
+        .privacy-section h3 {
+            color: #007BFF;
+        }
+
+        .privacy-section p {
+            line-height: 1.6;
+        }
+
+        /* Checkbox & Button */
+        .agreement {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .agree-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-align: center;
+            width: 150px;
+        }
+
+        .agree-btn:disabled {
+            background-color: gray;
+            cursor: not-allowed;
+        }
+
+        .agree-btn:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">Privacy Policy</div>
+
+    <div class="container">
+        <div class="privacy-section">
+            <h3>1. Introduction</h3>
+            <p>Welcome to our platform. Your privacy is important to us. This Privacy Policy explains how we collect, use, and protect your personal information.</p>
+        </div>
+
+        <div class="privacy-section">
+            <h3>2. Data Collection</h3>
+            <p>We collect information such as your name, email, phone number, location, and job-related details when you register and use our platform.</p>
+        </div>
+
+        <div class="privacy-section">
+            <h3>3. How We Use Your Data</h3>
+            <p>Your data is used to facilitate job postings, communication, and platform improvements. We do not sell your personal information to third parties.</p>
+        </div>
+
+        <div class="privacy-section">
+            <h3>4. Data Security</h3>
+            <p>We implement strong security measures to protect your data. However, we cannot guarantee 100% security due to the nature of the internet.</p>
+        </div>
+
+        <div class="privacy-section">
+            <h3>5. User Control & Deletion</h3>
+            <p>You can update or request the deletion of your data at any time through your account settings or by contacting support.</p>
+        </div>
+
+        <div class="privacy-section">
+            <h3>6. Third-Party Services</h3>
+            <p>We may use third-party services for authentication, messaging, and analytics. These services have their own privacy policies.</p>
+        </div>
+
+        <div class="privacy-section">
+            <h3>7. Changes to This Policy</h3>
+            <p>We may update this Privacy Policy periodically. We will notify users of any significant changes.</p>
+        </div>
+
+        <div class="agreement">
+            <input type="checkbox" id="agreeCheckbox">
+            <label for="agreeCheckbox">I have read and agree to the Privacy Policy</label>
+        </div>
+
+        <button id="agreeBtn" class="agree-btn" disabled>Agree & Continue</button>
+    </div>
+
+    <script>
+        // Enable the button only if the checkbox is checked
+        document.getElementById("agreeCheckbox").addEventListener("change", function() {
+            document.getElementById("agreeBtn").disabled = !this.checked;
+        });
+
+        // Redirect when the button is clicked
+        document.getElementById("agreeBtn").addEventListener("click", function() {
+            alert("Thank you for agreeing to our Privacy Policy! Redirecting...");
+            window.location.href = "index.html"; // Change this to the next page after agreement
+        });
+    </script>
+
+</body>
+</html>

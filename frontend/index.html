@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Web Linker - Homepage</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="logo.jpg" alt="Smart Web Linker">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about-us.html">About Us</a></li>
+                    <li><a href="how-it-works.html">How It Works</a></li>
+                    <li><a href="features.html">Features</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="jobs.html">Jobs</a></li>
+                    <li><a href="sign in.html">Sign In</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Connecting Employers with Trusted Househelps</h1>
+            <p>Efficient, Secure, and Transparent Domestic Services</p>
+            <a href="sign up.html" class="btn">Get Started</a>
+            
+            <!-- Trust Badges -->
+            <div class="trust-badges">
+                <div class="trust-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Secure Platform</span>
+                </div>
+                <div class="trust-badge">
+                    <i class="fas fa-user-check"></i>
+                    <span>Verified Professionals</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Banner -->
+    <section class="stats-banner">
+        <div class="container">
+            <div class="stat-item">
+                <div class="stat-number">20+</div>
+                <div class="stat-label">Successful Matches</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Satisfaction Rate</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Active Employers</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2>Why Choose Us?</h2>
+            <div class="feature-container">
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <h3>Job Posting</h3>
+                    <p>Employers can post jobs with detailed requirements.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Verified Users</h3>
+                    <p>Admins manually verify each user to ensure trust.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3>Secure Messaging</h3>
+                    <p>Chat directly with househelps before hiring.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sign-Up Section -->
+    <section class="signup-section">
+        <div class="container">
+            <h2>Join Us Today</h2>
+            <p>Sign up now and find the best match for your needs!</p>
+            <div class="signup-buttons">
+                <a href="sign up.html" class="btn">Start Matching Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Smart Web Linker. All rights reserved. | <a href="privacy-policy.html">Privacy Policy</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll Animation for Sign-Up Section
+        const signupSection = document.querySelector('.signup-section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    signupSection.style.opacity = '1';
+                }
+            });
+        }, { threshold: 0.5 });
+
+        observer.observe(signupSection);
+
+        // Feature Card Animations
+        document.querySelectorAll('.feature-card').forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.2}s`;
+        });
+    </script>
+</body>
+</html>

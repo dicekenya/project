@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Househelp Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="data:,">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: #333;
+            color: #fff;
+            padding: 10px 0;
+        }
+
+        header .logo img {
+            height: 50px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .dashboard {
+            margin-top: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .profile-section,
+        .edit-profile-section,
+        .verification-section,
+        .job-section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .profile-photo-upload {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-photo-upload img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .profile-photo-upload input[type="file"] {
+            display: none;
+        }
+
+        .profile-photo-upload label {
+            background: #ff7e5f;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .profile-photo-upload label:hover {
+            background: #feb47b;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+        }
+
+        .btn {
+            background: #ff7e5f;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .btn:hover {
+            background: #feb47b;
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .job-card {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .job-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .application-status {
+            color: #4CAF50;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .cancel-btn {
+            background: #ff4444;
+        }
+
+        .chat-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            font-family: Arial, sans-serif;
+        }
+
+        .chat-header {
+            background: #ff7e5f;
+            color: white;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .chat-body {
+            height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            margin: 10px 0;
+            padding: 10px 15px;
+            border-radius: 20px;
+            max-width: 75%;
+            word-wrap: break-word;
+            display: inline-block;
+            clear: both;
+        }
+
+        /* Received messages - Aligned Left */
+        .received {
+            background: #f1f1f1;
+            color: black;
+            align-self: flex-start;
+        }
+
+        /* Sent messages - Aligned Right */
+        .sent {
+            background: #ff7e5f;
+            color: white;
+            align-self: flex-end;
+        }
+
+        /* Message Text */
+        .message p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        /* Timestamp Style */
+        .message small {
+            display: block;
+            font-size: 10px;
+            color: rgba(0, 0, 0, 0.5);
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        /* Chat Input Section */
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #ddd;
+            background: #fff;
+        }
+
+        .chat-input textarea {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: none;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        .chat-input button {
+            background: #ff7e5f;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .chat-input button:hover {
+            background: #e76950;
+        }
+
+        /* Reviews Modal Styles */
+        #employerReviewsModal,
+        #employerReviewModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        #employerReviewsOverlay,
+        #employerReviewOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="logo.jpg" alt="Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="jobs.html">Jobs</a></li>
+                    <li><a href="sign in.html">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="dashboard container">
+        <h2>Househelp Dashboard</h2>
+
+        <div class="action-buttons">
+            <button class="btn" onclick="toggleSection('profile-section')">Profile</button>
+            <button class="btn" onclick="toggleSection('verification-section')">Verification</button>
+            <button class="btn" onclick="toggleSection('applied-jobs-section')">Applied Jobs</button>
+            <button class="btn" onclick="toggleSection('available-employers-section')">Available Employers</button>
+        </div>
+        <br>
+        <!-- Profile Section -->
+        <div class="profile-section" id="profile-section">
+            <h2>Profile</h2>
+            <div class="profile-photo-upload">
+                <img id="profile-preview" src="default.jpg" alt="Profile Photo">
+            </div>
+            <div class="user-info">
+                <p><strong>Full Name:</strong> <span id="display-fullname"></span></p>
+                <p><strong>Email:</strong> <span id="display-email"></span></p>
+                <p><strong>ID Number:</strong> <span id="display-id"></span></p>
+                <p><strong>Nationality:</strong> <span id="display-nationality"></span></p>
+                <p><strong>Religion:</strong> <span id="display-religion"></span></p>
+                <p><strong>Marital Status:</strong> <span id="display-marital"></span></p>
+                <p><strong>Age:</strong> <span id="display-age"></span></p>
+                <p><strong>Date of Birth:</strong> <span id="display-dob"></span></p>
+                <p><strong>Health Issues:</strong> <span id="display-health"></span></p>
+                <p><strong>Skills:</strong> <span id="display-skills"></span></p>
+                <p><strong>Experience:</strong> <span id="display-experience"></span></p>
+            </div>
+            <button class="btn" id="edit-profile-btn">Edit Profile</button>
+
+        </div>
+
+        <!-- Edit Profile Section -->
+        <div class="edit-profile-section hidden" id="edit-profile-section">
+            <h2>Edit Profile</h2>
+            <form id="profile-form">
+                <div class="profile-photo-upload">
+                    <img id="profile-preview-edit" src="default.jpg" alt="Profile Photo">
+                    <input type="file" id="profile-photo" accept="image/*">
+                    <label for="profile-photo">Change Photo</label>
+                </div>
+                <div class="form-group">
+                    <label for="fullname">Full Name</label>
+                    <input type="text" id="fullname" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required readonly> <!-- Readonly since email shouldn't change -->
+                </div>
+
+                <div class="form-group">
+                    <label for="id-number">ID Number</label>
+                    <input type="text" id="id-number" required>
+                </div>
+                <div class="form-group">
+                    <label for="nationality">Nationality</label>
+                    <input type="text" id="nationality" required>
+                </div>
+                <div class="form-group">
+                    <label for="religion">Religion</label>
+                    <input type="text" id="religion">
+                </div>
+                <div class="form-group">
+                    <label for="marital-status">Marital Status</label>
+                    <select id="marital-status">
+                        <option value="single">Single</option>
+                        <option value="married">Married</option>
+                        <option value="divorced">Divorced</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" min="18" required>
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="dob" required>
+                </div>
+                <div class="form-group">
+                    <label for="health-issues">Health Issues</label>
+                    <textarea id="health-issues"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="skills">Skills</label>
+                    <textarea id="skills"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="experience">Experience</label>
+                    <textarea id="experience"></textarea>
+                </div>
+                <button type="submit" class="btn">Save Changes</button>
+            </form>
+        </div>
+
+        <!-- Verification Section -->
+        <div class="verification-section hidden" id="verification-section">
+            <h2>Verification Information</h2>
+
+            <!-- Verified Message (Hidden by Default) -->
+            <p id="verification-status-message" class="hidden" style="color: green; font-weight: bold;">
+                Verified ✅
+            </p>
+
+            <!-- Verification Form -->
+            <div id="verification-content">
+                <form id="verification-form">
+                    <div class="form-group">
+                        <label for="face-scan">Take a Selfie (Face Scan)</label>
+                        <div id="face-scan-preview"
+                            style="width: 150px; height: 150px; border: 1px solid #ddd; margin-bottom: 10px;">
+                            <video id="face-scan-video" autoplay
+                                style="width: 100%; height: 100%; display: none;"></video>
+                            <canvas id="face-scan-canvas" style="display: none;"></canvas>
+                            <img id="face-scan-image" src="default.jpg" alt="Face Scan"
+                                style="width: 100%; height: 100%;">
+                        </div>
+                        <button type="button" class="btn" onclick="startFaceScan()">Start Camera</button>
+                        <button type="button" class="btn" onclick="captureFaceScan()">Capture Selfie</button>
+                        <input type="file" id="face-scan-upload" accept="image/*" style="display: none;">
+                        <button type="button" class="btn" onclick="uploadFaceScan()">Upload Selfie</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id-front">Take a Picture of ID Front</label>
+                        <div id="id-front-preview"
+                            style="width: 150px; height: 150px; border: 1px solid #ddd; margin-bottom: 10px;">
+                            <video id="id-front-video" autoplay
+                                style="width: 100%; height: 100%; display: none;"></video>
+                            <canvas id="id-front-canvas" style="display: none;"></canvas>
+                            <img id="id-front-image" src="id front.jpg" alt="ID Front"
+                                style="width: 100%; height: 100%;">
+                        </div>
+                        <button type="button" class="btn" onclick="startIdFrontScan()">Start Camera</button>
+                        <button type="button" class="btn" onclick="captureIdFront()">Capture ID Front</button>
+                        <input type="file" id="id-front-upload" accept="image/*" style="display: none;">
+                        <button type="button" class="btn" onclick="uploadIdFront()">Upload ID Front</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id-back">Take a Picture of ID Back</label>
+                        <div id="id-back-preview"
+                            style="width: 150px; height: 150px; border: 1px solid #ddd; margin-bottom: 10px;">
+                            <video id="id-back-video" autoplay
+                                style="width: 100%; height: 100%; display: none;"></video>
+                            <canvas id="id-back-canvas" style="display: none;"></canvas>
+                            <img id="id-back-image" src="id back.jpg" alt="ID Back" style="width: 100%; height: 100%;">
+                        </div>
+                        <button type="button" class="btn" onclick="startIdBackScan()">Start Camera</button>
+                        <button type="button" class="btn" onclick="captureIdBack()">Capture ID Back</button>
+                        <input type="file" id="id-back-upload" accept="image/*" style="display: none;">
+                        <button type="button" class="btn" onclick="uploadIdBack()">Upload ID Back</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="verification-status">Verification Status</label>
+                        <input type="text" id="verification-status" value="Pending" readonly>
+                    </div>
+
+                    <button type="submit" class="btn">Submit Verification</button>
+                </form>
+            </div>
+        </div>
+        <!-- Applied Jobs Section -->
+        <div class="job-section hidden" id="applied-jobs-section">
+            <h2>Applied Jobs</h2>
+            <div id="applied-jobs-list"></div>
+        </div>
+
+
+    </div>
+    <!-- Available Employers Section -->
+    <div class="job-section hidden" id="available-employers-section">
+        <h2>Available Employers</h2>
+        <div id="employers-list"></div>
+    </div>
+    <!-- Reviews Modal -->
+    <div class="modal-overlay" id="employerReviewsOverlay"></div>
+    <div class="applicants-modal" id="employerReviewsModal">
+        <h3>Reviews for <span id="modalEmployerName"></span></h3>
+        <div id="employerReviewsList"></div>
+        <button class="btn" onclick="closeEmployerReviewsModal()" style="margin-top: 15px;">Close</button>
+    </div>
+
+
+    <!-- Review Submission Modal -->
+    <div class="modal-overlay" id="employerReviewOverlay"></div>
+    <div class="applicants-modal" id="employerReviewModal">
+        <h3>Add Review</h3>
+        <form id="employerReviewForm">
+            <input type="hidden" id="employerId">
+            <div class="form-group">
+                <label for="employerRating">Rating (1-5)</label>
+                <input type="number" id="employerRating" min="1" max="5" required>
+            </div>
+            <div class="form-group">
+                <label for="employerComment">Comment</label>
+                <textarea id="employerComment" required></textarea>
+            </div>
+            <button type="button" class="btn" onclick="submitEmployerReview()">Submit Review</button>
+        </form>
+        <button class="btn" onclick="closeEmployerReviewModal()" style="margin-top: 15px;">Close</button>
+    </div>
+    <!-- Chat System -->
+    <div class="chat-container" id="jobChat">
+        <div class="chat-header">
+            <h3 id="chatJobTitle">Job Chat</h3>
+            <button class="btn" onclick="closeJobChat()">Close</button>
+        </div>
+        <div class="chat-body" id="chatBody"></div>
+        <div class="chat-input">
+            <textarea id="messageInput" placeholder="Type your message..."></textarea>
+            <button class="btn" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    <script>
+        let isVerified = false; // Initially set to false
+        let currentJobChat = null;
+        let currentUserId = null; // Corrected variable name
+
+        document.addEventListener('DOMContentLoaded', () => {
+            currentUserId = document.getElementById('id-number').value;
+            loadProfileData();
+            checkVerificationStatus();
+        });
+
+        async function loadProfileData() {
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/househelp/profile', {
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+                });
+
+                if (!response.ok) throw new Error('Failed to load profile data');
+
+                const profile = await response.json();
+
+                // ✅ Store profile data in a temporary object before updating the UI
+                const profileDetails = {
+                    fullname: profile.fullname,
+                    email: profile.email,
+                    idNumber: profile.idNumber,
+                    nationality: profile.nationality,
+                    religion: profile.religion,
+                    maritalStatus: profile.maritalStatus,
+                    age: profile.age,
+                    dob: profile.dob ? new Date(profile.dob).toISOString().split('T')[0] : "N/A",
+                    healthIssues: profile.healthIssues,
+                    skills: profile.skills,
+                    experience: profile.experience,
+                    profilePhoto: profile.profilePhoto || "default.jpg"
+                };
+
+                // ✅ Only update the DOM once (prevents partial rendering)
+                document.getElementById('display-fullname').textContent = profileDetails.fullname;
+                document.getElementById('display-email').textContent = profileDetails.email;
+                document.getElementById('display-id').textContent = profileDetails.idNumber;
+                document.getElementById('display-nationality').textContent = profileDetails.nationality;
+                document.getElementById('display-religion').textContent = profileDetails.religion;
+                document.getElementById('display-marital').textContent = profileDetails.maritalStatus;
+                document.getElementById('display-age').textContent = profileDetails.age;
+                document.getElementById('display-dob').textContent = profileDetails.dob;
+                document.getElementById('display-health').textContent = profileDetails.healthIssues;
+                document.getElementById('display-skills').textContent = profileDetails.skills;
+                document.getElementById('display-experience').textContent = profileDetails.experience;
+
+                // ✅ Wait for the image to load fully before setting it
+                const profileImg = document.getElementById('profile-preview');
+                const img = new Image();
+                img.onload = function () {
+                    profileImg.src = profileDetails.profilePhoto;
+                };
+                img.src = profileDetails.profilePhoto;
+
+            } catch (error) {
+                console.error('Error loading profile data:', error);
+            }
+        }
+
+        // ✅ Call the function when the page loads
+        document.addEventListener('DOMContentLoaded', loadProfileData);
+
+        async function checkVerificationStatus() {
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/househelp/status', {
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+                });
+
+                if (!response.ok) throw new Error('Error checking verification status');
+
+                const data = await response.json();
+                const verificationContent = document.getElementById('verification-content');
+                const verificationStatusMessage = document.getElementById('verification-status-message');
+                const verificationStatusInput = document.getElementById('verification-status');
+
+                if (data.verified) {
+                    verificationStatusInput.value = 'Verified ✅';
+                    verificationStatusMessage.classList.remove('hidden');
+                    verificationStatusMessage.textContent = 'Verified ✅';
+                    verificationStatusMessage.style.color = 'green';
+                    verificationContent.classList.add('hidden'); // Hide verification form
+                    localStorage.setItem('househelpVerified', 'true'); // Save in localStorage
+                } else if (data.verificationSubmitted) {
+                    verificationStatusInput.value = 'Pending Admin Approval';
+                    verificationStatusMessage.classList.remove('hidden');
+                    verificationStatusMessage.textContent = 'Pending Admin Approval ⏳';
+                    verificationStatusMessage.style.color = 'orange';
+                    verificationContent.classList.add('hidden'); // Hide verification form
+                    localStorage.setItem('househelpVerified', 'false'); // Save in localStorage
+                } else {
+                    verificationStatusInput.value = 'Not Verified';
+                    verificationStatusMessage.classList.add('hidden'); // Hide status message
+                    verificationContent.classList.remove('hidden'); // Show verification form
+                    localStorage.setItem('househelpVerified', 'false'); // Save in localStorage
+                }
+            } catch (error) {
+                console.error('Error checking verification status:', error);
+                alert('Error checking verification status.');
+            }
+        }
+
+        // ✅ Run checkVerificationStatus on page load
+        document.addEventListener('DOMContentLoaded', checkVerificationStatus);
+
+        function toggleSection(sectionId) {
+            const sections = ['profile-section', 'edit-profile-section', 'verification-section', 'applied-jobs-section', 'available-employers-section'];
+            sections.forEach(id => document.getElementById(id).classList.toggle('hidden', id !== sectionId));
+
+            if (sectionId === 'applied-jobs-section') {
+                loadAppliedJobs();
+            } else if (sectionId === 'available-employers-section') {
+                loadAvailableEmployers();
+            }
+        }
+
+
+        document.getElementById('profile-photo').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = async function (event) {
+                    document.getElementById('profile-preview').src = event.target.result;
+                    document.getElementById('profile-preview-edit').src = event.target.result;
+
+                    // ✅ Send the image to the backend
+                    await uploadHousehelpProfilePhoto(event.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Function to upload the profile photo to the backend
+        async function uploadHousehelpProfilePhoto(imageBase64) {
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/househelp/profile/photo', {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ profilePhoto: imageBase64 })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    console.log('Profile photo updated:', data);
+                } else {
+                    console.error('Failed to update profile photo:', data.message);
+                }
+            } catch (error) {
+                console.error('Error uploading profile photo:', error);
+            }
+        }
+        async function loadProfileeData() {
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/househelp/profile', {
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+                });
+
+                if (!response.ok) throw new Error('Failed to load profile data');
+
+                const profile = await response.json();
+
+                // ✅ Set the saved profile photo
+                document.getElementById('profile-preview').src = profile.profilePhoto || "default.jpg";
+                document.getElementById('profile-preview-edit').src = profile.profilePhoto || "default.jpg";
+            } catch (error) {
+                console.error('Error loading profile data:', error);
+            }
+        }
+
+        // ✅ Call this function when the page loads
+        document.addEventListener('DOMContentLoaded', loadProfileeData);
+        async function loadHousehelpProfile() {
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/househelp/profile', {
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+                });
+
+                if (!response.ok) throw new Error('Failed to fetch profile');
+
+                const user = await response.json();
+
+                // ✅ Fill the form fields with the user's existing data
+                document.getElementById('fullname').value = user.fullname || "";
+                document.getElementById('email').value = user.email || ""; // ✅ Ensure email is set
+                document.getElementById('id-number').value = user.idNumber || "";
+                document.getElementById('nationality').value = user.nationality || "";
+                document.getElementById('religion').value = user.religion || "";
+                document.getElementById('marital-status').value = user.maritalStatus || "single";
+                document.getElementById('age').value = user.age || "";
+                document.getElementById('dob').value = user.dob ? new Date(user.dob).toISOString().split('T')[0] : "";
+                document.getElementById('health-issues').value = user.healthIssues || "";
+                document.getElementById('skills').value = user.skills ? user.skills.join(', ') : "";
+                document.getElementById('experience').value = user.experience || "";
+                document.getElementById('profile-preview-edit').src = user.profilePhoto || "default.jpg";
+
+                // ✅ Show the edit profile section when data is loaded
+                document.getElementById('edit-profile-section').classList.remove('hidden');
+
+            } catch (error) {
+                console.error("Error loading profile data:", error);
+            }
+        }
+
+
+
+        // ✅ Load househelp data when "Edit Profile" button is clicked
+        document.getElementById('edit-profile-btn').addEventListener('click', function () {
+            loadHousehelpProfile();
+            toggleSection('edit-profile-section');
+        });
+
+        document.getElementById('profile-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const profileData = {
+                fullname: document.getElementById('fullname').value,
+                idNumber: document.getElementById('id-number').value,
+                nationality: document.getElementById('nationality').value,
+                religion: document.getElementById('religion').value,
+                maritalStatus: document.getElementById('marital-status').value,
+                age: document.getElementById('age').value,
+                dob: document.getElementById('dob').value,
+                healthIssues: document.getElementById('health-issues').value,
+                skills: document.getElementById('skills').value,
+                experience: document.getElementById('experience').value
+            };
+
+            const response = await fetch('http://localhost:5000/api/auth/househelp/profile', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                body: JSON.stringify(profileData)
+            });
+
+            if (response.ok) {
+                document.getElementById('display-fullname').textContent = profileData.fullname;
+                document.getElementById('display-id').textContent = profileData.idNumber;
+                document.getElementById('display-nationality').textContent = profileData.nationality;
+                document.getElementById('display-religion').textContent = profileData.religion;
+                document.getElementById('display-marital').textContent = profileData.maritalStatus;
+                document.getElementById('display-age').textContent = profileData.age;
+                document.getElementById('display-dob').textContent = profileData.dob ? new Date(profileData.dob).toISOString().split('T')[0] : "N/A";
+                document.getElementById('display-health').textContent = profileData.healthIssues;
+                document.getElementById('display-skills').textContent = profileData.skills;
+                document.getElementById('display-experience').textContent = profileData.experience;
+                toggleSection('profile-section');
+            } else {
+                alert('Error updating profile data.');
+            }
+        });
+
+        async function loadAppliedJobs() {
+            const response = await fetch('http://localhost:5000/api/jobs/applied', {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            });
+
+            if (response.ok) {
+                const jobs = await response.json();
+                const jobsList = document.getElementById('applied-jobs-list');
+
+                jobsList.innerHTML = jobs.map(job => `
+            <div class="job-card">
+                <h3>${job.title}</h3>
+                <p><strong>Location:</strong> ${job.location}</p>
+                <p><strong>Employer:</strong> ${job.employerName}</p>
+                <p><strong>Description:</strong> ${job.description}</p>
+                <div class="job-actions">
+                   <button class="btn cancel-btn" onclick="cancelApplication('${job._id}')">Cancel Application</button>
+                    <button class="btn" onclick="openJobChat('${job._id}')">Chat</button>
+                </div>
+                <span class="application-status">Applied ✓</span>
+            </div>
+        `).join('');
+            } else {
+                alert('Error loading applied jobs.');
+            }
+        }
+
+
+        async function applyForJob(jobId) {
+            if (!isVerified) {
+                alert('Please complete verification first.');
+                return;
+            }
+
+            const response = await fetch('http://localhost:5000/api/jobs/' + jobId + '/apply', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                body: JSON.stringify({ userId: currentUserId })
+            });
+
+            if (response.ok) {
+                loadAvailableJobs();
+                alert('Application submitted successfully!');
+            } else {
+                alert('Error applying for job.');
+            }
+        }
+
+        async function cancelApplication(jobId) {
+            console.log("Job ID:", jobId); // Debugging
+
+            if (!jobId) {
+                alert("Error: Job ID is missing.");
+                return;
+            }
+
+            const response = await fetch(`http://localhost:5000/api/jobs/${jobId}/cancel`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            });
+
+            if (response.ok) {
+                alert('Application cancelled!');
+                location.reload(); // ✅ Refresh the page instead of calling an undefined function
+            } else {
+                alert('Error cancelling application.');
+            }
+        }
+
+
+
+        function openJobChat(jobId) {
+            if (!jobId) {
+                alert("Error: Job ID is missing.");
+                return;
+            }
+
+            currentJobChat = jobId;
+            document.getElementById('jobChat').style.display = 'block';
+            loadChatMessages(jobId);
+        }
+
+
+        function closeJobChat() {
+            document.getElementById('jobChat').style.display = 'none';
+            currentJobChat = null;
+        }
+
+        async function loadChatMessages(jobId) {
+            const response = await fetch(`http://localhost:5000/api/jobs/${jobId}/chat`, {
+                headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+            });
+
+            if (response.ok) {
+                const messages = await response.json();
+                const chatBody = document.getElementById('chatBody');
+
+                chatBody.innerHTML = messages.map(msg => {
+                    const isSent = msg.sender._id === currentUserId; // Check if message was sent by the current user
+                    return `
+                <div class="message ${isSent ? 'sent' : 'received'}">
+                    <p><strong>${msg.sender.fullname}:</strong> ${msg.text}</p>
+                    <small>${new Date(msg.timestamp).toLocaleTimeString()}</small>
+                </div>
+            `;
+                }).join('');
+
+                chatBody.scrollTop = chatBody.scrollHeight;
+            } else {
+                alert('Error loading chat messages.');
+            }
+        }
+
+
+        async function sendMessage() {
+            if (!currentJobChat) return;
+
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            if (text) {
+                const response = await fetch(`http://localhost:5000/api/jobs/${currentJobChat}/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    },
+                    body: JSON.stringify({ text: text })
+                });
+
+                if (response.ok) {
+                    loadChatMessages(currentJobChat);
+                    input.value = '';
+                } else {
+                    alert('Error sending message.');
+                }
+            }
+        }
+
+
+        // Verification Functions
+        let faceScanVideo = document.getElementById('face-scan-video');
+        let faceScanCanvas = document.getElementById('face-scan-canvas');
+        let idFrontVideo = document.getElementById('id-front-video');
+        let idFrontCanvas = document.getElementById('id-front-canvas');
+        let idBackVideo = document.getElementById('id-back-video');
+        let idBackCanvas = document.getElementById('id-back-canvas');
+
+        // ✅ Fix: Corrected function to start the camera
+        async function startCamera(videoElement) {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                videoElement.srcObject = stream;
+                videoElement.style.display = 'block';
+            } catch (error) {
+                alert('❌ Error accessing camera: ' + error.message);
+            }
+        }
+
+        // ✅ Fix: Stop video stream properly after capturing the image
+        function captureImage(videoElement, canvasElement, imageElementId) {
+            const context = canvasElement.getContext('2d');
+            canvasElement.width = videoElement.videoWidth;
+            canvasElement.height = videoElement.videoHeight;
+            context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+            const imageData = canvasElement.toDataURL('image/png');
+            document.getElementById(imageElementId).src = imageData;
+
+            // ✅ Fix: Stop the camera after capture
+            if (videoElement.srcObject) {
+                videoElement.srcObject.getTracks().forEach(track => track.stop());
+            }
+            videoElement.style.display = 'none'; // Hide video after capture
+        }
+
+        // ✅ Camera Controls
+        function startFaceScan() { startCamera(faceScanVideo); }
+        function captureFaceScan() { captureImage(faceScanVideo, faceScanCanvas, 'face-scan-image'); }
+        function startIdFrontScan() { startCamera(idFrontVideo); }
+        function captureIdFront() { captureImage(idFrontVideo, idFrontCanvas, 'id-front-image'); }
+        function startIdBackScan() { startCamera(idBackVideo); }
+        function captureIdBack() { captureImage(idBackVideo, idBackCanvas, 'id-back-image'); }
+
+        // ✅ File Upload Functions
+        function uploadFaceScan() { document.getElementById('face-scan-upload').click(); }
+        function uploadIdFront() { document.getElementById('id-front-upload').click(); }
+        function uploadIdBack() { document.getElementById('id-back-upload').click(); }
+
+        // ✅ File Upload Handlers
+        document.getElementById('face-scan-upload').onchange = function (e) { handleFileUpload(e, 'face-scan-image'); };
+        document.getElementById('id-front-upload').onchange = function (e) { handleFileUpload(e, 'id-front-image'); };
+        document.getElementById('id-back-upload').onchange = function (e) { handleFileUpload(e, 'id-back-image'); };
+
+        // ✅ Fix: Added error handling in file uploads
+        function handleFileUpload(event, imageElementId) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!validTypes.includes(file.type)) {
+                alert("❌ Invalid file type. Please upload an image (JPG, PNG, GIF).");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById(imageElementId).src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Verification Form Submission
+        document.getElementById('verification-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            async function toBase64(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = (error) => reject(error);
+                });
+            }
+
+            const faceScanFile = document.getElementById('face-scan-upload').files[0];
+            const idFrontFile = document.getElementById('id-front-upload').files[0];
+            const idBackFile = document.getElementById('id-back-upload').files[0];
+
+            // ✅ Check if all required files are uploaded
+            if (!faceScanFile || !idFrontFile || !idBackFile) {
+                alert("❌ Please upload all three verification documents (Face Scan, ID Front, and ID Back) before submitting.");
+                return;
+            }
+
+            const formData = {
+                faceScan: await toBase64(faceScanFile),
+                idFront: await toBase64(idFrontFile),
+                idBack: await toBase64(idBackFile)
+            };
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/househelp/verification', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    alert('✅ Verification submitted successfully! Your account will be verified after admin approval.');
+                    document.getElementById('verification-status').value = 'Pending Admin Approval';
+                    document.getElementById('verification-status-message').textContent = 'Pending Admin Approval ⏳';
+                    document.getElementById('verification-status-message').classList.remove('hidden');
+                    document.getElementById('verification-content').classList.add('hidden'); // Hide form after submission
+                } else {
+                    alert('❌ Verification submission failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error submitting verification:', error);
+                alert('❌ An error occurred. Please try again.');
+            }
+        });
+
+
+        // Enter Key Support
+        document.getElementById('messageInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        async function loadAvailableEmployers() {
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                alert('Error: You are not logged in.');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/employers/available', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error loading employers');
+                }
+
+                const employers = await response.json();
+                const employersList = document.getElementById('employers-list');
+
+                employersList.innerHTML = employers
+                    .map(employer => `
+                <div class="job-card">
+                    <h3>${employer.fullname}</h3
+                    <p><strong>Location:</strong> ${employer.location || 'N/A'}</p>
+                    <p><strong>Rating:</strong> ${employer.averageRating || 'Not Rated'}</p>
+                    <button class="btn" onclick="viewEmployerReviews('${employer._id}')">View Reviews</button>
+                    <button class="btn" onclick="openReviewModal('${employer._id}')">Add Review</button>
+                </div>
+            `)
+                    .join('');
+            } catch (error) {
+                console.error('Error loading employers:', error);
+                alert('Error loading employers. Check console for details.');
+            }
+        }
+        // Function to view reviews for an employer
+        async function viewEmployerReviews(userId) {
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                alert('You must be logged in to view reviews.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/auth/${userId}/reviews`, {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    alert(`Error loading reviews: ${errorData.message}`);
+                    return;
+                }
+
+                const data = await response.json();
+
+                // Set the user's name in the modal
+                document.getElementById('modalEmployerName').textContent = data.fullname;
+
+                // Clear previous reviews
+                const reviewsList = document.getElementById('employerReviewsList');
+                reviewsList.innerHTML = '';
+
+                if (data.reviews.length === 0) {
+                    reviewsList.innerHTML = '<p>No reviews yet.</p>';
+                } else {
+                    // Add each review to the modal
+                    data.reviews.forEach(review => {
+                        const reviewCard = document.createElement('div');
+                        reviewCard.className = 'applicant-card';
+                        reviewCard.innerHTML = `
+                    <p><strong>Reviewer:</strong> ${review.reviewer.fullname}</p>
+                    <p><strong>Rating:</strong> ${review.rating}</p>
+                    <p><strong>Comment:</strong> ${review.comment}</p>
+                `;
+                        reviewsList.appendChild(reviewCard);
+                    });
+                }
+
+                // Show the modal
+                document.getElementById('employerReviewsModal').style.display = 'block';
+                document.getElementById('employerReviewsOverlay').style.display = 'block';
+            } catch (error) {
+                console.error('Error loading reviews:', error);
+                alert('Error loading reviews. Check console for details.');
+            }
+        }
+
+        // Function to open the review modal
+        function openReviewModal(employerId) {
+            document.getElementById('employerId').value = employerId;
+            document.getElementById('employerReviewModal').style.display = 'block';
+            document.getElementById('employerReviewOverlay').style.display = 'block';
+        }
+
+        // Function to close the employer reviews modal
+        function closeEmployerReviewsModal() {
+            document.getElementById('employerReviewsModal').style.display = 'none';
+            document.getElementById('employerReviewsOverlay').style.display = 'none';
+        }
+
+        // Add event listener to close the modal when clicking outside
+        document.getElementById('employerReviewsOverlay').addEventListener('click', closeEmployerReviewsModal);
+        // Function to open the review submission modal
+        function openReviewModal(employerId) {
+            document.getElementById('employerId').value = employerId;
+            document.getElementById('employerReviewModal').style.display = 'block';
+            document.getElementById('employerReviewOverlay').style.display = 'block';
+        }
+
+        // Function to close the employer review submission modal
+        function closeEmployerReviewModal() {
+            document.getElementById('employerReviewModal').style.display = 'none';
+            document.getElementById('employerReviewOverlay').style.display = 'none';
+        }
+
+        // Add event listener to close the review submission modal when clicking outside
+        document.getElementById('employerReviewOverlay').addEventListener('click', closeEmployerReviewModal);
+
+        // Function to submit a review
+        async function submitEmployerReview() {
+            const employerId = document.getElementById('employerId').value;
+            const rating = document.getElementById('employerRating').value;
+            const comment = document.getElementById('employerComment').value;
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                alert('You must be logged in to submit a review.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/auth/${employerId}/reviews`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({
+                        rating: rating,
+                        comment: comment
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    alert(`Error submitting review: ${errorData.message}`);
+                    return;
+                }
+
+                alert('Review submitted successfully!');
+                closeEmployerReviewModal(); // Close the modal after submission
+                loadAvailableEmployers(); // Reload employers to show the new review
+            } catch (error) {
+                console.error('Error submitting review:', error);
+                alert('Error submitting review. Check console for details.');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAppliedJobs();
+            loadAvailableEmployers(); // Load employers on page load
+        });
+        document.getElementById('dob').addEventListener('change', function () {
+            const dob = new Date(this.value);
+            if (isNaN(dob)) return; // Ensure it's a valid date
+
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                age--; // Adjust if the birthday hasn't occurred yet this year
+            }
+
+            if (age < 18) {
+                alert("Age must be at least 18 years old.");
+                document.getElementById('dob').value = ""; // Clear invalid DOB
+                document.getElementById('age').value = ""; // Clear age field
+            } else {
+                document.getElementById('age').value = age; // Set valid age
+            }
+        });
+        const socket = io("http://localhost:5000"); // Connect to WebSocket server
+
+        // Listen for househelp updates
+        socket.on("househelpUpdated", (data) => {
+            console.log("🔄 Househelp updated:", data);
+            const househelpElement = document.querySelector(`#househelp-${data.id} .status`);
+            if (househelpElement) {
+                househelpElement.textContent = data.status;
+            }
+        });
+
+        // Listen for employer updates
+        socket.on("employerUpdated", (data) => {
+            console.log("🔄 Employer updated:", data);
+            const employerElement = document.querySelector(`#employer-${data.id} .status`);
+            if (employerElement) {
+                employerElement.textContent = data.status;
+            }
+        });
+
+        // Listen for job updates
+        socket.on("jobUpdated", (data) => {
+            console.log("🔄 Job updated:", data);
+            const jobElement = document.querySelector(`#job-${data.id} .title`);
+            if (jobElement) {
+                jobElement.textContent = data.title;
+            }
+        });
+    </script>
+</body>
+
+</html>

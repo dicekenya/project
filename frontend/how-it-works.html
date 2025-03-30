@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How the System Works</title>
+    <style>
+        /* General Page Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        /* Page Header */
+        .header {
+            background-color: #007BFF;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* Container */
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* Step-by-step cards */
+        .step-card {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s;
+        }
+
+        .step-card:hover {
+            transform: scale(1.03);
+        }
+
+        .step-icon {
+            font-size: 30px;
+            margin-right: 20px;
+            color: #007BFF;
+        }
+
+        .step-text {
+            flex: 1;
+        }
+
+        /* Highlight Employers and Househelps */
+        .highlight {
+            font-weight: bold;
+            color: #007BFF;
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: block;
+            text-align: center;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            width: 150px;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">How the System Works</div>
+
+    <div class="container">
+        <!-- Step 1 -->
+        <div class="step-card">
+            <div class="step-icon">👥</div>
+            <div class="step-text">
+                <strong>Step 1: Registration & Login</strong>
+                <p>Employers and Househelps sign up for an account. <span class="highlight">Admins manually verify users</span> before they can proceed.</p>
+            </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-card">
+            <div class="step-icon">📋</div>
+            <div class="step-text">
+                <strong>Step 2: Employers Post Jobs</strong>
+                <p>Employers can create job postings detailing the type of househelp required, location, salary, and work conditions.</p>
+            </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step-card">
+            <div class="step-icon">🔎</div>
+            <div class="step-text">
+                <strong>Step 3: Househelps Browse Jobs</strong>
+                <p>Verified Househelps can view available job postings and apply for the jobs that match their skills.</p>
+            </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step-card">
+            <div class="step-icon">💬</div>
+            <div class="step-text">
+                <strong>Step 4: Employers & Househelps Communicate</strong>
+                <p>Once a Househelp applies, the employer can <span class="highlight">chat with the househelp</span> via the integrated messaging system.</p>
+            </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step-card">
+            <div class="step-icon">✅</div>
+            <div class="step-text">
+                <strong>Step 5: Hiring & Finalization</strong>
+                <p>After discussions, the employer selects a househelp, and the system marks the job as filled.</p>
+            </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="step-card">
+            <div class="step-icon">⭐</div>
+            <div class="step-text">
+                <strong>Step 6: Ratings & Reviews</strong>
+                <p>After job completion, both employers and househelps can <span class="highlight">rate and review each other</span> to improve trust.</p>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <a href="index.html" class="back-btn">Back to Home</a>
+    </div>
+
+</body>
+</html>

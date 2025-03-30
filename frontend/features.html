@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features</title>
+    <style>
+        /* General Page Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        /* Header */
+        .header {
+            background-color: #007BFF;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* Container */
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        /* Features Section */
+        .features-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        /* Individual Feature Card */
+        .feature-card {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            color: #007BFF;
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: block;
+            text-align: center;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            width: 150px;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">Platform Features</div>
+
+    <div class="container">
+        <div class="features-section">
+            <!-- Feature 1 -->
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <h3>Job Posting</h3>
+                <p>Employers can create detailed job postings, specifying location, duties, and salary expectations.</p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>User Verification</h3>
+                <p>Admins manually verify both employers and househelps to ensure a safe and trusted environment.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <h3>Messaging System</h3>
+                <p>Employers and househelps can communicate securely through an integrated chat system.</p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="feature-card">
+                <div class="feature-icon">⭐</div>
+                <h3>Ratings & Reviews</h3>
+                <p>Both employers and househelps can rate and review each other after a job is completed.</p>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Admin Dashboard</h3>
+                <p>Admins have access to an analytics dashboard to monitor user activities and system performance.</p>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Security & Privacy</h3>
+                <p>Strict security measures are in place to protect user data and prevent unauthorized access.</p>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <a href="index.html" class="back-btn">Back to Home</a>
+    </div>
+
+</body>
+</html>
